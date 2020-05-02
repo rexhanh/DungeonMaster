@@ -21,7 +21,7 @@ class GameScene: SKScene {
     let columns = 100
     let rows = 100
     let tileSize = CGSize(width: 32, height: 32)
-    let moveJoystick = TLAnalogJoystick(withDiameter: 32)
+    var moveJoystick = TLAnalogJoystick(withDiameter: 32)
     let playerCam = SKCameraNode()
     var tileMap = SKTileMapNode()
     var tileset = SKTileSet()
@@ -32,7 +32,6 @@ class GameScene: SKScene {
     var leftMosterNumber: SKLabelNode!
     override func didMove(to view: SKView) {
         setupBoundary()
-        
 //        setupBGM()
         playerCam.setScale(0.5)
         self.camera = playerCam
@@ -41,10 +40,10 @@ class GameScene: SKScene {
         setupHPbar()
         keepPrevAnimation = true
         setupPhysics()
-        addRandomMonster(to: self.childNode(withName: "D1") as! SKTileMapNode, of: 10, with: "enemy_0")
-        addRandomMonster(to: self.childNode(withName: "D2") as! SKTileMapNode, of: 20, with: "enemy_1")
-        addRandomMonster(to: self.childNode(withName: "D3") as! SKTileMapNode, of: 30, with: "enemy_2")
-        addRandomMonster(to: self.childNode(withName: "D4") as! SKTileMapNode, of: 40, with: "enemy_3")
+        addRandomMonster(to: self.childNode(withName: "D1") as! SKTileMapNode, of: 5, with: "enemy_0")
+        addRandomMonster(to: self.childNode(withName: "D2") as! SKTileMapNode, of: 5, with: "enemy_1")
+        addRandomMonster(to: self.childNode(withName: "D3") as! SKTileMapNode, of: 5, with: "enemy_2")
+        addRandomMonster(to: self.childNode(withName: "D4") as! SKTileMapNode, of: 5, with: "enemy_3")
         setupMonsterNumber()
     }
     
@@ -146,7 +145,10 @@ class GameScene: SKScene {
     }
     
     func setupJoystick() {
-        
+        if moveJoystick.parent != nil {
+            moveJoystick.removeFromParent()
+        }
+        print("game scene joy stick called")
         moveJoystick.handleImage = UIImage(named: "jStick")
         moveJoystick.baseImage = UIImage(named: "jSubstrate")
         let moveJoystickHiddenArea = TLAnalogJoystickHiddenArea(rect: CGRect(x: 0, y: 0, width: -500, height: -500))
@@ -168,56 +170,18 @@ class GameScene: SKScene {
         player.addChild(moveJoystickHiddenArea)
     }
     
-    func setupDungeonWall(at center: CGPoint) {
-        let wall = self.tileset.tileGroups.first { $0.name == "Wall" }
-        let wallLayerTop = SKTileMapNode(tileSet: self.tileset, columns: 16, rows: 1, tileSize: tileSize)
-        let wallLayerBottom = SKTileMapNode(tileSet: self.tileset, columns: 16, rows: 1, tileSize: tileSize)
-        let wallLeft = SKTileMapNode(tileSet: self.tileset, columns: 1, rows: 16, tileSize: tileSize)
-        let wallRight = SKTileMapNode(tileSet: self.tileset, columns: 1, rows: 16, tileSize: tileSize)
-        for i in 0 ..< 16 {
-            wallLayerTop.setTileGroup(wall, forColumn: i, row: 0)
-            wallLayerBottom.setTileGroup(wall, forColumn: i, row: 0)
-            wallLeft.setTileGroup(wall, forColumn: 0, row: i)
-            wallRight.setTileGroup(wall, forColumn: 0, row: i)
-        }
-        
-        let walls = [wallLayerTop,wallLayerBottom,wallLeft,wallRight]
-
-        let x = 2 * center.x
-        let y = 2 * center.y
-        wallLayerTop.position = CGPoint(x: x, y: y+8 * 32 - 16)
-        wallLayerBottom.position = CGPoint(x: x, y: y - 8 * 32 + 16)
-        wallLeft.position = CGPoint(x: -8*32+16+x, y: y)
-        wallRight.position = CGPoint(x: 8*32 - 16 + x, y: y)
-        let tbSize = CGSize(width: 32*16, height: 32)
-        let lrSize = CGSize(width: 32, height: 32*16)
-        wallLayerTop.physicsBody = SKPhysicsBody(rectangleOf: tbSize)
-        wallLayerBottom.physicsBody = SKPhysicsBody(rectangleOf: tbSize)
-        wallRight.physicsBody = SKPhysicsBody(rectangleOf: lrSize)
-        wallLeft.physicsBody = SKPhysicsBody(rectangleOf: lrSize)
-        for w in walls {
-            w.physicsBody?.affectedByGravity = false
-            w.physicsBody?.isDynamic = false
-            w.physicsBody?.collisionBitMask = collitionType.wall.rawValue
-            w.zPosition = Constants.layerZpos
-            self.addChild(w)
-        }
-    }
     
     func setupPhysics() {
         guard let d1 = self.childNode(withName: "D1") as! SKTileMapNode? else {return}
         guard let d2 = self.childNode(withName: "D2") as! SKTileMapNode? else {return}
         guard let d3 = self.childNode(withName: "D3") as! SKTileMapNode? else {return}
         guard let d4 = self.childNode(withName: "D4") as! SKTileMapNode? else {return}
-//        if let d1 = self.childNode(withName: "D1") as? SKTileMapNode{
-//            print("level1")
             let col = d1.numberOfColumns
             let row = d1.numberOfRows
             let width = d1.tileSize.width
             let height = d1.tileSize.height
             let halfWidth = (CGFloat(col) / 2.0) * tileSize.width
             let halfHeight = (CGFloat(row) / 2.0) * tileSize.height
-//            print("colums \(col), row: \(row)")
             for i in 0..<col {
                 for j in 0..<row {
                     let tiledefination1 = d1.tileDefinition(atColumn: i, row: j)
@@ -226,10 +190,8 @@ class GameScene: SKScene {
                     let tiledefination4 = d4.tileDefinition(atColumn: i, row: j)
                     if let iswall1 = tiledefination1?.userData?["wallType"] as? Bool {
                         if (iswall1) {
-//                            print("col\(i) row\(j) is wall")
                             let x = CGFloat(i) * width - halfWidth
                             let y = CGFloat(j) * height - halfHeight
-//                            print("x \(x), y \(y)")
                             let rect = CGRect(x: 0, y: 0, width: width, height: height)
                             let tileNode = SKShapeNode(rect: rect)
                             tileNode.position = CGPoint(x: x, y: y+16)
@@ -237,18 +199,13 @@ class GameScene: SKScene {
                             tileNode.physicsBody?.isDynamic = false
                             tileNode.physicsBody?.collisionBitMask = collitionType.wall.rawValue
                             tileNode.lineWidth = 0
-//                            tileNode.fillColor = SKColor.black
-//                            tileNode.alpha = 0.5
                             d1.addChild(tileNode)
-//                        }
                     }
                 }
                     if let iswall2 = tiledefination2?.userData?["wallType"] as? Bool {
                         if (iswall2) {
-//                            print("col\(i) row\(j) is wall")
                             let x = CGFloat(i) * width - halfWidth
                             let y = CGFloat(j) * height - halfHeight
-//                            print("x \(x), y \(y)")
                             let rect = CGRect(x: 0, y: 0, width: width, height: height)
                             let tileNode = SKShapeNode(rect: rect)
                             tileNode.position = CGPoint(x: x, y: y+16)
@@ -262,7 +219,6 @@ class GameScene: SKScene {
                     
                     if let iswall3 = tiledefination3?.userData?["wallType"] as? Bool {
                         if (iswall3) {
-//                            print("col\(i) row\(j) is wall")
                             let x = CGFloat(i) * width - halfWidth
                             let y = CGFloat(j) * height - halfHeight
 //                            print("x \(x), y \(y)")
@@ -352,13 +308,15 @@ class GameScene: SKScene {
                 }
             }
         }
-        if monsterNumber >= 99 {
-            self.leftMosterNumber.text = "\(monsterNumber)/100"
+        if monsterNumber > 0 {
+            self.leftMosterNumber.text = "\(monsterNumber)/20"
         } else  {
             let s = SKScene(fileNamed: "BossScene")!
-            s.scaleMode = .aspectFill
-//            self.view?.presentScene(s)
-            self.view?.presentScene(s, transition: SKTransition.fade(withDuration: 2))
+            if let scene = s as? BossScene {
+                scene.scaleMode = .aspectFill
+                scene.moveJoystick = self.moveJoystick
+                self.view?.presentScene(scene, transition: SKTransition.fade(withDuration: 2))
+            }
         }
     }
     

@@ -19,6 +19,10 @@
 		512EFED924466F6B0013236D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 512EFED724466F6B0013236D /* LaunchScreen.storyboard */; };
 		51579F9B244D351800EA08B3 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51579F9A244D351800EA08B3 /* Animation.swift */; };
 		51579F9D244D37CE00EA08B3 /* Magic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51579F9C244D37CE00EA08B3 /* Magic.swift */; };
+		517C1F0A245CF0C20017F610 /* StartScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 517C1F09245CF0C20017F610 /* StartScene.sks */; };
+		517C1F0D245CF24B0017F610 /* StartScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517C1F0C245CF24B0017F610 /* StartScene.swift */; };
+		517C1F0F245D11B00017F610 /* EndScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 517C1F0E245D11B00017F610 /* EndScene.sks */; };
+		517C1F11245D12680017F610 /* EndScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517C1F10245D12680017F610 /* EndScene.swift */; };
 		51D49ABF2457A08C00537F61 /* bgm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 51D49ABE2457A08C00537F61 /* bgm.mp3 */; };
 		51EBC9C4244782790070A457 /* MyTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = 51EBC9C3244782790070A457 /* MyTileSet.sks */; };
 		51EBC9C7244786160070A457 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EBC9C6244786160070A457 /* Person.swift */; };
@@ -40,6 +44,10 @@
 		512EFEDA24466F6B0013236D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		51579F9A244D351800EA08B3 /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		51579F9C244D37CE00EA08B3 /* Magic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Magic.swift; sourceTree = "<group>"; };
+		517C1F09245CF0C20017F610 /* StartScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = StartScene.sks; sourceTree = "<group>"; };
+		517C1F0C245CF24B0017F610 /* StartScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartScene.swift; sourceTree = "<group>"; };
+		517C1F0E245D11B00017F610 /* EndScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = EndScene.sks; sourceTree = "<group>"; };
+		517C1F10245D12680017F610 /* EndScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndScene.swift; sourceTree = "<group>"; };
 		51D49ABE2457A08C00537F61 /* bgm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = bgm.mp3; path = ../../../../../Downloads/bgm.mp3; sourceTree = "<group>"; };
 		51EBC9C3244782790070A457 /* MyTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyTileSet.sks; sourceTree = "<group>"; };
 		51EBC9C6244786160070A457 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
@@ -76,12 +84,13 @@
 		512EFEC724466F640013236D /* DungeonMaster */ = {
 			isa = PBXGroup;
 			children = (
+				517C1F0B245CF0CD0017F610 /* Scene */,
 				51EBC9C8244786540070A457 /* Utils */,
 				51EBC9C5244785FF0070A457 /* Models */,
 				512EFEC824466F640013236D /* AppDelegate.swift */,
-				512EFECA24466F640013236D /* GameScene.sks */,
-				511DAE15245BD6570056E104 /* BossScene.sks */,
+				517C1F10245D12680017F610 /* EndScene.swift */,
 				512EFECE24466F640013236D /* GameScene.swift */,
+				517C1F0C245CF24B0017F610 /* StartScene.swift */,
 				511DAE19245BE07A0056E104 /* BossScene.swift */,
 				512EFED024466F640013236D /* GameViewController.swift */,
 				512EFED224466F640013236D /* Main.storyboard */,
@@ -92,6 +101,17 @@
 				51D49ABD2457A07400537F61 /* Sounds */,
 			);
 			path = DungeonMaster;
+			sourceTree = "<group>";
+		};
+		517C1F0B245CF0CD0017F610 /* Scene */ = {
+			isa = PBXGroup;
+			children = (
+				511DAE15245BD6570056E104 /* BossScene.sks */,
+				512EFECA24466F640013236D /* GameScene.sks */,
+				517C1F09245CF0C20017F610 /* StartScene.sks */,
+				517C1F0E245D11B00017F610 /* EndScene.sks */,
+			);
+			path = Scene;
 			sourceTree = "<group>";
 		};
 		51D49ABD2457A07400537F61 /* Sounds */ = {
@@ -179,7 +199,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				517C1F0F245D11B00017F610 /* EndScene.sks in Resources */,
 				51EBC9C4244782790070A457 /* MyTileSet.sks in Resources */,
+				517C1F0A245CF0C20017F610 /* StartScene.sks in Resources */,
 				512EFED424466F640013236D /* Main.storyboard in Resources */,
 				512EFECB24466F640013236D /* GameScene.sks in Resources */,
 				51D49ABF2457A08C00537F61 /* bgm.mp3 in Resources */,
@@ -199,8 +221,10 @@
 				511DAE1A245BE07A0056E104 /* BossScene.swift in Sources */,
 				512EFECF24466F640013236D /* GameScene.swift in Sources */,
 				512EFED124466F640013236D /* GameViewController.swift in Sources */,
+				517C1F0D245CF24B0017F610 /* StartScene.swift in Sources */,
 				51EBC9C7244786160070A457 /* Person.swift in Sources */,
 				51579F9D244D37CE00EA08B3 /* Magic.swift in Sources */,
+				517C1F11245D12680017F610 /* EndScene.swift in Sources */,
 				51EBC9CA244786700070A457 /* TLAnalogJoystick.swift in Sources */,
 				51579F9B244D351800EA08B3 /* Animation.swift in Sources */,
 				512EFEC924466F640013236D /* AppDelegate.swift in Sources */,

@@ -19,7 +19,7 @@ class BossScene: SKScene {
         
     let animation = Animation()
     let attackButton = SKShapeNode(circleOfRadius: 64)
-    let moveJoystick = TLAnalogJoystick(withDiameter: 64)
+    var moveJoystick: TLAnalogJoystick!
     let playerCam = SKCameraNode()
     var bossHpBar: SKShapeNode!
     var player = Player(imageNamed: "player_s1")
@@ -39,6 +39,37 @@ class BossScene: SKScene {
         setupHPbar()
         setupBoss()
         setupBossHPbar()
+        setupBoundary()
+    }
+    
+    func setupBoundary() {
+        guard let d1 = self.childNode(withName: "background") as! SKTileMapNode? else {return}
+        let col = d1.numberOfColumns
+        let row = d1.numberOfRows
+        let width = d1.tileSize.width
+        let height = d1.tileSize.height
+        let tileSize = CGSize(width: 32, height: 32)
+        let halfWidth = (CGFloat(col) / 2.0) * tileSize.width
+        let halfHeight = (CGFloat(row) / 2.0) * tileSize.height
+        for i in 0..<col {
+            for j in 0..<row {
+                let tiledefination1 = d1.tileDefinition(atColumn: i, row: j)
+                if let iswall1 = tiledefination1?.userData?["wallType"] as? Bool {
+                    if (iswall1) {
+                        let x = CGFloat(i) * width - halfWidth
+                        let y = CGFloat(j) * height - halfHeight
+                        let rect = CGRect(x: 0, y: 0, width: width, height: height)
+                        let tileNode = SKShapeNode(rect: rect)
+                        tileNode.position = CGPoint(x: x, y: y)
+                        tileNode.physicsBody = SKPhysicsBody(rectangleOf: tileSize, center: CGPoint(x: width / 2.0, y: height / 2.0))
+                        tileNode.physicsBody?.isDynamic = false
+                        tileNode.physicsBody?.collisionBitMask = collitionType.wall.rawValue
+                        tileNode.lineWidth = 1
+                        d1.addChild(tileNode)
+                    }
+                }
+            }
+        }
     }
     
     func setupBossHPbar() {
@@ -141,7 +172,10 @@ class BossScene: SKScene {
         }
         
         func setupJoystick() {
-            
+            print("get called")
+            if moveJoystick.parent != nil {
+                moveJoystick.removeFromParent()
+            }
             moveJoystick.handleImage = UIImage(named: "jStick")
             moveJoystick.baseImage = UIImage(named: "jSubstrate")
             let moveJoystickHiddenArea = TLAnalogJoystickHiddenArea(rect: CGRect(x: 0, y: 0, width: -500, height: -500))
@@ -184,14 +218,14 @@ class BossScene: SKScene {
     }
     override func update(_ currentTime: TimeInterval) {
         playerCam.position = player.position
-        print("Boss hp: \(self.boss1.hitPoint)")
+//        print("Boss hp: \(self.boss1.hitPoint)")
         if !keepPrevAnimation {
             updateAnimation()
         }
         let r = Int.random(in: 0..<1000)
         if r > 980 && !bossDead {
             straightAttack(from: self.boss1)
-        } else if r > 970 && r <= 980 && !bossDead{
+        } else if r > 975 && r <= 980 && !bossDead{
             circleAttack(from: self.boss1)
             randomMove(for: self.boss1)
         }
@@ -212,18 +246,33 @@ class BossScene: SKScene {
                         if magic.intersects(b) {
                             magic.removeFromParent()
                             boss1.hitPoint -= 25
-                            self.bossHpBar.removeFromParent()
-                            setupBossHPbar()
                             if boss1.hitPoint <= 0 {
+                                boss1.hitPoint = 0
                                 self.bossDead = true
                                 let bossDisappear = SKAction.fadeOut(withDuration: 3)
                                 let bossDead = SKAction.removeFromParent()
                                 boss1.run(SKAction.sequence([bossDisappear, bossDead]))
                             }
+                            self.bossHpBar.removeFromParent()
+                            setupBossHPbar()
                         }
                     }
                 }
             }
+        }
+        if player.hitPoint <= 0 {
+            
+            let s = SKScene(fileNamed: "GameScene")!
+            if let scene = s as? GameScene {
+                scene.moveJoystick = self.moveJoystick
+                scene.scaleMode = .aspectFill
+                self.view?.presentScene(scene, transition: SKTransition.fade(withDuration: 2))
+            }
+        }
+        if bossDead {
+            let s = SKScene(fileNamed: "EndScene")!
+            s.scaleMode = .aspectFill
+            self.view?.presentScene(s, transition: SKTransition.fade(withDuration: 2))
         }
     }
     
