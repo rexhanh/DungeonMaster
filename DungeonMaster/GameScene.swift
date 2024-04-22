@@ -80,12 +80,12 @@ class GameScene: SKScene {
         self.player.addChild(leftMosterNumber)
     }
     
-    func setupBGM() {
-        let bgm = SKAudioNode(fileNamed: "bgm")
-        bgm.autoplayLooped = true
-        self.addChild(bgm)
-        bgm.run(SKAction.changeVolume(to: Float(0.03), duration: 0))
-    }
+//    func setupBGM() {
+//        let bgm = SKAudioNode(fileNamed: "bgm")
+//        bgm.autoplayLooped = true
+//        self.addChild(bgm)
+//        bgm.run(SKAction.changeVolume(to: Float(0.03), duration: 0))
+//    }
     
     func addMonster(to map: SKTileMapNode, with name: String) {
         let monster = Monster(imageNamed: name)
